@@ -2,7 +2,7 @@ USERNAME = "sharminm2"
 
 
 # REPLACE THESE LOCATIONS WITH YOUR DIRECTORIES
-PROJECT_location = f"/Users/sharminm2/OneDrive - National Institutes of Health/context/CATSEvalData"
+PROJECT_location = f"CATSEvalData"
 
 
 SIGNATURES = ["Angiogenesis", "Apoptosis", "Cell_Cycle", "Differentiation",

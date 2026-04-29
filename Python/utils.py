@@ -123,29 +123,3 @@ def read_genes(data_option, signature, cancerType, annotationdf):
 
 
 
-def find_brca_subtype_samples(expmat):
-    #expmat = load_expression_data('BRCA', annotationdf)
-    samples = expmat.columns
-    
-    # expression
-    brcadf = pd.read_csv("/Users/msharmin/Dropbox/nih/db/tcga-clinical/BRCA.547.PAM50.SigClust.Subtypes.txt", sep="\t")
-    brcadf['Sample_name'] = brcadf['Sample'].apply(lambda x: '-'.join(x.split('-')[:4])[:-1])
-    brcadf = brcadf[['Sample_name', 'PAM50']].drop_duplicates()
-    
-    for subtype in ['Basal', 'LumA', 'LumB', 'Her2']:
-        cancerSubType = 'BRCA_'+subtype
-        submat = expmat.loc[:,samples.isin(brcadf[brcadf['PAM50']==subtype]['Sample_name'])]
-        submat.to_csv(f"/Users/msharmin/Dropbox/nih/db/xena/oncofeats_logtpm/TCGA-{cancerSubType}/matrix.csv.gz", 
-                      compression='gzip')
-        
-    # clinical
-    brcadf = pd.read_csv("/Users/msharmin/Dropbox/nih/db/tcga-clinical/BRCA.547.PAM50.SigClust.Subtypes.txt", sep="\t")
-    brcadf['Sample_name'] = brcadf['Sample'].apply(lambda x: '-'.join(x.split('-')[:3]))
-    brcadf = brcadf[['Sample_name', 'PAM50']].drop_duplicates()
-    
-    clinical = pd.read_csv("/Users/msharmin/Dropbox/nih/db/tcga-clinical/TCGAclinicalDataFile.csv")
-    clinical['subtype'] = clinical['type']
-    for subtype in ['Basal', 'LumA', 'LumB', 'Her2']:
-        print(subtype, clinical.loc[clinical['samples'].isin(brcadf[brcadf['PAM50']==subtype]['Sample_name']),:].shape)
-        clinical.loc[clinical['samples'].isin(brcadf[brcadf['PAM50']==subtype]['Sample_name']), 'subtype'] = 'BRCA_'+subtype
-    return None
